@@ -9,10 +9,10 @@ import Foundation
 
 struct RandomMissionSuggestions {
     
-    static let all: [String] = ["Floss", "Meditate", "Read", "Go for a walk", "Take a nap", "Pay someone a compliment", "Learn something new", "Housework", "Excercise", "Catch up with a friend", "Stretch", "Journal"]
+    static let all: [String] = ["Floss", "Meditate", "Read", "Go for a walk", "Take a nap", "Pay someone a compliment", "Learn something new", "Housework", "Excercise", "Catch up with a friend", "Stretch", "Journal", "Take a shower", "Brush your teeth", "Do laundry"]
 }
 
 struct RandomMissionSuggestionsPlusStupid {
     
-    static let all: [String] = ["Floss", "Meditate", "Read", "Go for a walk", "Take a nap", "Pay someone a compliment", "Learn something new", "Housework", "Excercise", "Catch up with a friend", "Stretch", "Journal", "Drink a whole gallon of milk in less than a minute", "Make a hysterically incorrect edit to a Wikipedia article"]
+    static let all: [String] = ["Floss", "Meditate", "Read", "Go for a walk", "Take a nap", "Pay someone a compliment", "Learn something new", "Housework", "Excercise", "Catch up with a friend", "Stretch", "Journal", "Take a shower", "Brush your teeth", "Do laundry", "Drink a whole gallon of milk in less than a minute", "Make an incorrect (but hilarious) edit to a Wikipedia article", "Put a curse on a sworn enemy", "Antagonize an evil spirit using a Ouija board", "Tap the ads in this app to help the developer earn a little extra money", "Use a time machine to go back in time and prevent a tragic event"]
 }

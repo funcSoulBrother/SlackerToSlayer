@@ -42,9 +42,11 @@ struct MissionFormView: View {
                     } label: {
                         Text("Name")
                     }
-                    Text("Suggestions: \(firstSuggestion), \(secondSuggestion), \(thirdSuggestion)")
-                        .foregroundStyle(.secondary)
-                        .font(.caption)
+                    if !model.updating {
+                        Text("Suggestions: \(firstSuggestion), \(secondSuggestion), \(thirdSuggestion)")
+                            .foregroundStyle(.secondary)
+                            .font(.caption)
+                    }
                     LabeledContent {
                         TextField("Points", value: $model.points, formatter: intFormatter)
                             .textFieldStyle(.roundedBorder)
@@ -57,19 +59,26 @@ struct MissionFormView: View {
                                 }
                             }
                     } label: {
-                        Text("Points (number between 1 and 25)")
+                        Text("Points (1 - 25)")
                     }
-                    Text("Can't decide on a point value? Press this button to help you out!")
-                    Button("Generate with Questions") {
+                    Text("Can't decide on a point value? Press the button below to help you out!")
+                        .foregroundStyle(.secondary)
+                        .font(.caption)
+                    Button("Point Questionnaire") {
                         showingPointsGenerator = true
                     }
+                    .padding(6)
+                    .font(.footnote)
+                    .background(Color(UIColor.secondarySystemBackground))
+                    .cornerRadius(6)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
                     .sheet(isPresented: $showingPointsGenerator) {
                         ExploringPointsGenerator(points: $model.points)
                     }
                     LabeledContent {
                         ColorPicker("", selection: $model.colorHex, supportsOpacity: false)
                     } label: {
-                        Text("Mission Color")
+                        Text("Color")
                     }
                     .padding(.top)
                     Button(model.updating ? "Update" : "Create") {

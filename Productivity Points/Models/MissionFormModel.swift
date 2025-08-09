@@ -10,7 +10,7 @@ import SwiftUI
 @Observable
 class MissionFormModel {
     var name = ""
-    var icon = ""
+//    var icon = ""
     var colorHex: Color = .red
     var points = 1
     
@@ -24,7 +24,7 @@ class MissionFormModel {
         self.mission = mission
         self.name = mission.name
         self.colorHex = Color(hex: mission.colorHex)
-        self.points = points
+        self.points = mission.points
     }
     
     var disabled: Bool {

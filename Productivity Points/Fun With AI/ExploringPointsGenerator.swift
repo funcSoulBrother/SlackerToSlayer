@@ -7,13 +7,6 @@
 
 import SwiftUI
 
-// Struct for options
-struct QuestionnaireOption: Identifiable, Equatable, Hashable {
-    var id = UUID()
-    let label: String
-    let value: Int
-}
-
 // Static options (defined once, not on every redraw)
 let howLong = [
     QuestionnaireOption(label: "Quick", value: 1),
@@ -28,7 +21,7 @@ let howMotivated = [
 
 let howAligned = [
     QuestionnaireOption(label: "Not Really", value: 1),
-    QuestionnaireOption(label: "Kind of", value: 2),
+    QuestionnaireOption(label: "Kind Of", value: 2),
     QuestionnaireOption(label: "Yes, Very", value: 3)
 ]
 
@@ -38,13 +31,19 @@ struct ExploringPointsGenerator: View {
     @State private var selectedA: QuestionnaireOption = howLong[0]
     @State private var selectedB: QuestionnaireOption = howMotivated[0]
     @State private var selectedC: QuestionnaireOption = howAligned[0]
-    private var tempResult: Int { selectedA.value * selectedB.value * selectedC.value }
+    private var tempResult: Int {
+        PointCalculator.calculatePoints(
+            a: selectedA,
+            b: selectedB,
+            c: selectedC
+        )
+    }
 
     var body: some View {
         VStack(spacing: 20) {
             Text("Point Questionnaire")
                 .font(.title2)
-                .bold()
+                .fontWeight(.bold)
             
             VStack {
                 Text("How long does this task usually take?")
@@ -78,14 +77,13 @@ struct ExploringPointsGenerator: View {
                 .pickerStyle(.segmented)
             }
             .padding()
-            
-            Button("Calculate") {
+            Text("Current Point Value: \(tempResult)")
+                .fontWeight(.bold)
+            Button("Use This Point Value!") {
                 points = tempResult
                 dismiss()
             }
             .buttonStyle(.borderedProminent)
-            
-            Text("Current Point Value: \(tempResult)")
         }
         .padding()
     }

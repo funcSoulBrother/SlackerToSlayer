@@ -19,7 +19,7 @@ struct ContentView: View {
     
     var body: some View {
         TabView(selection: $savedSelectedTab) {
-            Text("High scores and stuff.")
+CalendarHeaderView()
                 .tabItem{
                     Label("High Scores", systemImage: "xmark.circle")
                 }
