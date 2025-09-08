@@ -9,6 +9,9 @@ import SwiftUI
 import SwiftData
 
 struct CalendarView: View {
+    @Environment(\.modelContext) private var context
+//    @EnvironmentObject var appearanceSettings: AppearanceSettings
+//    @Environment(ColorSettings.self) var colorSettings
     @State private var color: Color = .blue
     let date: Date
     let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
@@ -16,25 +19,32 @@ struct CalendarView: View {
     @State private var days: [Date] = []
 //    let selectedActivity: Activity?
     @Query private var missionCompletions: [MissionCompletion]
+    @Query private var appearanceSettings: [AppearanceSettings]
+//    @Query private var settings: [ColorSettings]
     @State private var counts = [Int : Int]()
     
     init(date: Date) {
         self.date = date
 //        self.selectedActivity = selectedActivity
         let endOfMonthAdjustment = Calendar.current.date(byAdding: .day, value: -1, to: date.endOfMonth)!
-        let predicate = #Predicate<MissionCompletion> {$0.date >= date.startOfMonth && $0.date <= endOfMonthAdjustment}
+        let predicate = #Predicate<MissionCompletion> {
+            $0.date >= date.startOfMonth &&
+            $0.date <= date.endOfMonth
+        }
         _missionCompletions = Query(filter: predicate, sort: \MissionCompletion.date)
     }
     
     var body: some View {
+        let colorSettings = ColorSettings.shared(in: context)
+        let appearance = appearanceSettings.first ?? AppearanceSettings()
+        ///does this view need appearance?
 //        let color = selectedActivity == nil ? .blue : Color(hex: selectedActivity!.hexColor)
         VStack {
             HStack {
                 ForEach(daysOfWeek.indices, id: \.self) { index in
                 Text(daysOfWeek[index])
                         .fontWeight(.black)
-                        .foregroundStyle(color)
-                    ///replace with accent color
+                        .foregroundStyle(colorSettings.accentColor)
                         .frame(maxWidth: .infinity)
                 }
             }
@@ -51,8 +61,8 @@ struct CalendarView: View {
                                 Circle()
                                     .foregroundStyle(
                                         Date.now.startOfDay == day.startOfDay
-                                        ? .red.opacity(counts[day.dayInt] != nil ? 0.8 : 0.3)
-                                        : color.opacity(counts[day.dayInt] != nil ? 0.8 : 0.3))
+                                        ? colorSettings.secondAccentColor.opacity(counts[day.dayInt] != nil ? 0.8 : 0.3)
+                                        : colorSettings.accentColor.opacity(counts[day.dayInt] != nil ? 0.8 : 0.3))
                             )
 //                            .overlay(alignment: .bottomTrailing) {
 //                                if let count = counts[day.dayInt] {
@@ -70,7 +80,7 @@ struct CalendarView: View {
                                 if let count = counts[day.dayInt] {
                                     ZStack {
                                         Capsule()
-                                            .fill(.pink)
+                                            .fill(colorSettings.secondAccentColor)
                                             .frame(width: 40, height: 20)
 //                                            .background(.pink)
                                         Text(count <= 999 ? "\(count)" : "999")
@@ -121,4 +131,6 @@ struct CalendarView: View {
 //    , selectedActivity: nil)
         .modelContainer(Mission.preview)
         .modelContainer(MissionCompletion.preview)
+        .environment(AppearanceSettings())
+        .environment(ColorSettings())
 }

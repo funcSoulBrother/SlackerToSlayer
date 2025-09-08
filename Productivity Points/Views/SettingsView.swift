@@ -6,18 +6,24 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SettingsView: View {
 //    @State var accentColor: Color = .blue
-    @EnvironmentObject var appearanceSettings: AppearanceSettings
-    @Environment(ColorSettings.self) var colorSettings
+//    @EnvironmentObject var appearanceSettings: AppearanceSettings
+//    @Environment(ColorSettings.self) var colorSettings
+    @Environment(\.modelContext) private var context
+//    @Query private var settings: [ColorSettings]
+    @Query private var appearanceSettings: [AppearanceSettings]
 
     var body: some View {
+        let colorSettings = ColorSettings.shared(in: context)
+        let appearance = appearanceSettings.first ?? AppearanceSettings()
         ZStack {
-            Color(appearanceSettings.arcadeAppearance ? "ArcadeBG" : "EasyBG")
+            Color(appearance.arcadeAppearance ? "ArcadeBG" : "EasyBG")
                 .ignoresSafeArea()
             VStack(alignment: .leading, spacing: 20) {
-                if appearanceSettings.arcadeAppearance {
+                if appearance.arcadeAppearance {
                     Text("Settings")
                         .font(.custom("PressStart2P-Regular", size: 21))
                         .foregroundStyle(colorSettings.accentColor)
@@ -29,11 +35,11 @@ struct SettingsView: View {
                 }
                 Text("Appearance Mode")
                     .font(.headline)
-                    .foregroundStyle(appearanceSettings.arcadeAppearance ? Color("ArcadeText") : .primary)
+                    .foregroundStyle(appearance.arcadeAppearance ? Color("ArcadeText") : .primary)
                 
                 Picker("Appearance", selection: Binding(
-                    get: { appearanceSettings.arcadeAppearance },
-                    set: { appearanceSettings.arcadeAppearance = $0 }
+                    get: { appearance.arcadeAppearance },
+                    set: { appearance.arcadeAppearance = $0 }
                 )) {
                     Text("Arcade").tag(true)
                     Text("Normal").tag(false)
@@ -44,10 +50,21 @@ struct SettingsView: View {
                 LabeledContent("Accent Color") {
                     ColorPicker("", selection: Binding(
                         get: { colorSettings.accentColor },
-                        set: { colorSettings.accentColor = $0 }
+                        set: { colorSettings.accentColor = $0
+                            try? context.save()
+                        }
                     ), supportsOpacity: false)
                 }
-                .foregroundStyle(appearanceSettings.arcadeAppearance ? Color("ArcadeText") : .primary)
+                
+                LabeledContent("Second Accent Color") {
+                    ColorPicker("", selection: Binding(
+                        get: { colorSettings.secondAccentColor },
+                        set: { colorSettings.secondAccentColor = $0
+                            try? context.save()
+                        }
+                    ), supportsOpacity: false)
+                }
+                .foregroundStyle(appearance.arcadeAppearance ? Color("ArcadeText") : .primary)
             }
             .padding()
         }
@@ -57,5 +74,5 @@ struct SettingsView: View {
 #Preview {
     SettingsView()
         .environment(ColorSettings())
-        .environmentObject(AppearanceSettings())
+        .environment(AppearanceSettings())
 }

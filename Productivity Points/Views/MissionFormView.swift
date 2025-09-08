@@ -8,7 +8,7 @@ import SwiftUI
 import SwiftData
 
 struct MissionFormView: View {
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @State var model: MissionFormModel
     @State private var showingPointsGenerator = false
@@ -94,12 +94,12 @@ struct MissionFormView: View {
                                 points: model.points,
                                 colorHex: model.colorHex.toHex()!
                             )
-                            modelContext.insert(newMission)
+                            context.insert(newMission)
                             print("Mission inserted into context")
                             
                             // Force save and check for errors
                             do {
-                                try modelContext.save()
+                                try context.save()
                                 print("Mission saved successfully")
                             } catch {
                                 print("Error saving mission: \(error)")

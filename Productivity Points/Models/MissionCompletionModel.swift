@@ -61,7 +61,12 @@ extension MissionCompletion {
                 MissionCompletion(id: UUID(), date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 26))!, mission: batheInPoisonedSulfericAcid),
                 MissionCompletion(id: UUID(), date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 29))!, mission: batheInPoisonedSulfericAcid),
                 MissionCompletion(id: UUID(), date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 29))!, mission: doPoisonedCocaine),
-                MissionCompletion(id: UUID(), date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 5))!, mission: snuggleWithPoisonedTeddyBear)
+                MissionCompletion(id: UUID(), date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 5))!, mission: snuggleWithPoisonedTeddyBear),
+                MissionCompletion(id: UUID(), date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 30))!, mission: doPoisonedCocaine),
+                MissionCompletion(id: UUID(), date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 30))!, mission: snuggleWithPoisonedTeddyBear),
+                MissionCompletion(id: UUID(), date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 31))!, mission: eatPoisonedChili),
+                
+                
                 
             ]
         }

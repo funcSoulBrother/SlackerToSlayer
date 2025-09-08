@@ -10,7 +10,7 @@ import SwiftData
 
 struct MissionChecklistPractice: View {
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject var appearanceSettings: AppearanceSettings
+//    @EnvironmentObject var appearanceSettings: AppearanceSettings
     @State private var selectedDate = Date()
     @State private var modalType: ModalType?
     @State private var showMissionDeleteAlert = false
@@ -158,7 +158,8 @@ struct MissionChecklistPractice: View {
             mission.completions.append(newCompletion)
             
             //
-            SoundManager.shared.playSound(named: appearanceSettings.arcadeAppearance ? "AffirmativeArcade" : "AffirmativeNormal")
+//            SoundManager.shared.playSound(named: appearanceSettings.arcadeAppearance ? "AffirmativeArcade" : "AffirmativeNormal")
+            ///not updated for new appearance code, just commented out to get rid of error message
             rumble.impactOccurred()
         }
 
@@ -193,5 +194,5 @@ struct MissionChecklistPractice: View {
 #Preview {
     MissionChecklistPractice()
         .modelContainer(Mission.preview)
-        .environmentObject(AppearanceSettings())
+        .environment(AppearanceSettings())
 }

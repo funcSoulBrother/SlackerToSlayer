@@ -32,8 +32,8 @@ extension Date {
         Calendar.current.dateInterval(of: .month, for: self)!.start
     }
     var endOfMonth: Date {
-        let lastDay = Calendar.current.dateInterval(of: .month, for: self)!.end
-        return Calendar.current.date(byAdding: .day, value: -1, to: lastDay)!
+        let startOfNextMonth = Calendar.current.dateInterval(of: .month, for: self)!.end
+        return Calendar.current.date(byAdding: .second, value: -1, to: startOfNextMonth)!
     }
     var startOfPreviousMonth: Date {
         let dayInPreviousMonth = Calendar.current.date(byAdding: .month, value: -1, to: self)!
