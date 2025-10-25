@@ -55,14 +55,14 @@ struct CalendarView: View {
                     } else {
                         Text(day.formatted(.dateTime.day()))
                             .fontWeight(.bold)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Color(appearance.mode == .arcade ? "ArcadeBG" : "EasyBG"))
                             .frame(maxWidth: .infinity, minHeight: 40)
                             .background(
                                 Circle()
                                     .foregroundStyle(
                                         Date.now.startOfDay == day.startOfDay
-                                        ? colorSettings.secondAccentColor.opacity(counts[day.dayInt] != nil ? 0.8 : 0.3)
-                                        : colorSettings.accentColor.opacity(counts[day.dayInt] != nil ? 0.8 : 0.3))
+                                        ? colorSettings.secondAccentColor.opacity(counts[day.dayInt] != nil ? 0.8 : 0.4)
+                                        : colorSettings.accentColor.opacity(counts[day.dayInt] != nil ? 0.8 : 0.4))
                             )
 //                            .overlay(alignment: .bottomTrailing) {
 //                                if let count = counts[day.dayInt] {
@@ -85,7 +85,7 @@ struct CalendarView: View {
 //                                            .background(.pink)
                                         Text(count <= 999 ? "\(count)" : "999")
                                             .bold()
-                                            .foregroundColor(.secondary)
+                                            .foregroundStyle(Color(appearance.mode == .arcade ? "ArcadeBG" : "EasyBG"))
                                         //                                        .background (
                                         //                                            Color(.pink)
                                         //                                        )
@@ -128,7 +128,6 @@ struct CalendarView: View {
 
 #Preview {
     CalendarView(date: Date.now)
-//    , selectedActivity: nil)
         .modelContainer(Mission.preview)
         .modelContainer(MissionCompletion.preview)
         .environment(AppearanceSettings())

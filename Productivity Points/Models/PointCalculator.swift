@@ -15,29 +15,29 @@ struct PointCalculator {
     ) -> Int {
         if a.label == "Possibly All Day" {
             return 20
-        } else if a.label == "Quick" && b.label == "Not Very Motivated" && c.label == "Not Really" {
+        } else if a.label == "Quick" && b.label == "Not Very Enjoyable" && c.label == "Not Really" {
             return 2
-        } else if a.label == "Quick" && b.label == "Not Very Motivated" && c.label == "Kind Of" {
+        } else if a.label == "Quick" && b.label == "Not Very Enjoyable" && c.label == "Kind Of" {
             return 3
-        } else if a.label == "Quick" && b.label == "Not Very Motivated" && c.label == "Yes, Very" {
+        } else if a.label == "Quick" && b.label == "Not Very Enjoyable" && c.label == "Yes, Very" {
             return 4
-        } else if a.label == "Quick" && b.label == "Very Motivated" && c.label == "Not Really" {
+        } else if a.label == "Quick" && b.label == "Very Enjoyable" && c.label == "Not Really" {
             return 1
-        } else if a.label == "Quick" && b.label == "Very Motivated" && c.label == "Kind Of" {
+        } else if a.label == "Quick" && b.label == "Very Enjoyable" && c.label == "Kind Of" {
             return 2
-        } else if a.label == "Quick" && b.label == "Very Motivated" && c.label == "Yes, Very" {
+        } else if a.label == "Quick" && b.label == "Very Enjoyable" && c.label == "Yes, Very" {
             return 3
-        } else if a.label == "Pretty Long" && b.label == "Not Very Motivated" && c.label == "Not Really" {
+        } else if a.label == "Pretty Long" && b.label == "Not Very Enjoyable" && c.label == "Not Really" {
             return 4
-        } else if a.label == "Pretty Long" && b.label == "Not Very Motivated" && c.label == "Kind Of" {
+        } else if a.label == "Pretty Long" && b.label == "Not Very Enjoyable" && c.label == "Kind Of" {
             return 5
-        } else if a.label == "Pretty Long" && b.label == "Not Very Motivated" && c.label == "Yes, Very" {
+        } else if a.label == "Pretty Long" && b.label == "Not Very Enjoyable" && c.label == "Yes, Very" {
             return 6
-        } else if a.label == "Pretty Long" && b.label == "Very Motivated" && c.label == "Not Really" {
+        } else if a.label == "Pretty Long" && b.label == "Very Enjoyable" && c.label == "Not Really" {
             return 3
-        } else if a.label == "Pretty Long" && b.label == "Very Motivated" && c.label == "Kind Of" {
+        } else if a.label == "Pretty Long" && b.label == "Very Enjoyable" && c.label == "Kind Of" {
             return 4
-        } else if a.label == "Pretty Long" && b.label == "Very Motivated" && c.label == "Yes, Very" {
+        } else if a.label == "Pretty Long" && b.label == "Very Enjoyable" && c.label == "Yes, Very" {
             return 5
         }
 

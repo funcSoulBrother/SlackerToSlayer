@@ -191,8 +191,8 @@ struct MissionChecklistPractice: View {
     }
 }
 
-#Preview {
-    MissionChecklistPractice()
-        .modelContainer(Mission.preview)
-        .environment(AppearanceSettings())
-}
+//#Preview {
+//    MissionChecklistPractice()
+//        .modelContainer(Mission.preview)
+//        .environment(AppearanceSettings())
+//}

@@ -9,6 +9,7 @@ import SwiftUI
 enum ModalType: View, Identifiable, Equatable {
     case newMission
     case updateMission(Mission)
+    case help
 
     
     var id: String {
@@ -17,6 +18,8 @@ enum ModalType: View, Identifiable, Equatable {
             "newMission"
         case .updateMission:
             "updateMission"
+        case .help:
+            "help"
         }
     }
     
@@ -26,6 +29,8 @@ enum ModalType: View, Identifiable, Equatable {
             MissionFormView(model: MissionFormModel())
         case .updateMission(let mission):
             MissionFormView(model: MissionFormModel(mission: mission))
+        case .help:
+            HelpView()
         }
     }
 }

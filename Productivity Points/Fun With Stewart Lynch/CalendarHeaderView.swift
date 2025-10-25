@@ -21,6 +21,7 @@ struct CalendarHeaderView: View {
     @Query private var missionCompletions: [MissionCompletion]
     @Query(sort: \Mission.points) private var missions: [Mission]
     @Query private var appearanceSettings: [AppearanceSettings]
+    var previewAppearance: AppearanceSettings?
 //    @Query private var settings: [ColorSettings]
 //    @Query(sort: \Activity.name) private var activities: [Activity]
 //    @State private var selectedActivity: Activity?
@@ -53,15 +54,20 @@ struct CalendarHeaderView: View {
     
     var body: some View {
         let colorSettings = ColorSettings.shared(in: context)
-        let appearance = appearanceSettings.first ?? AppearanceSettings()
+        let appearance = appearanceSettings.first ?? {
+            let new = AppearanceSettings()
+            context.insert(new)
+            try? context.save()
+            return new
+        }()
         NavigationStack {
         ZStack {
-            Color(appearance.arcadeAppearance ? "ArcadeBG" : "EasyBG")
+            Color(appearance.mode == .arcade ? "ArcadeBG" : "EasyBG")
                 .ignoresSafeArea()
                 VStack {
-                    if appearance.arcadeAppearance {
+                    if appearance.mode == .arcade {
                         Text("Monthly Scores")
-                            .font(.custom("PressStart2P-Regular", size: 20))
+                            .font(.custom("PressStart2P-Regular", size: 23))
                             .multilineTextAlignment(.center)
                             .foregroundStyle(colorSettings.accentColor)
                             .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
@@ -79,23 +85,43 @@ struct CalendarHeaderView: View {
                     HStack {
                         Picker("", selection: $selectedMonth) {
                             ForEach(months.indices, id: \.self) { index in
-                                Text(months[index]).tag(index + 1)
+                                Text(months[index])
+                                    .foregroundStyle(.orange)
+                                    .tag(index + 1)
                             }
                         }
+                        .pickerStyle(.menu)
                         Picker("", selection: $selectedYear) {
                             ForEach(years, id:\.self) { year in
                                 Text(String(year))
                             }
                         }
                     }
+                    .tint(.orange)
                     .buttonStyle(.bordered)
+
                     CalendarView(date: monthDate)
                         .id(monthDate)
                     //                , selectedActivity: selectedActivity)
                     Spacer()
-                    Text("Total Monthly Points: \(totalPointsForSelectedMonth)")
-                        .font(.headline)
-                        .padding(.top, 8)
+//                    Text("Total Monthly Points: \(totalPointsForSelectedMonth)")
+//                        .font(.headline)
+//                        .padding(.top, 8)
+                    if appearance.mode == .arcade {
+                        Text("Total Monthly Points: \(totalPointsForSelectedMonth)")
+                            .font(.custom("PressStart2P-Regular", size: 18))
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(colorSettings.accentColor)
+                            .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
+                            .padding(.bottom, 40)
+                    } else {
+                        Text("Total Monthly Points: \(totalPointsForSelectedMonth)")
+                            .font(.largeTitle)
+                            .padding(.bottom, 5)
+                            .transition(.scale)
+                            .foregroundStyle(colorSettings.accentColor)
+                            .padding(.bottom, 40)
+                    }
                 }
             }
             .onAppear {
@@ -122,8 +148,7 @@ struct CalendarHeaderView: View {
 }
 
 #Preview {
-    CalendarHeaderView()
+    CalendarHeaderView(previewAppearance: AppearanceSettings(mode: .arcade))
         .modelContainer(MissionCompletion.preview)
-        .environment(AppearanceSettings())
         .environment(ColorSettings())
 }

@@ -22,11 +22,25 @@
 
 import SwiftData
 
+//@Model
+//class AppearanceSettings {
+//    var arcadeAppearance: Bool
+//    
+//    init(arcadeAppearance: Bool = true) {
+//        self.arcadeAppearance = arcadeAppearance
+//    }
+//}
+
+enum AppearanceMode: String, Codable, CaseIterable {
+    case arcade
+    case normal
+}
+
 @Model
 class AppearanceSettings {
-    var arcadeAppearance: Bool
+    var mode: AppearanceMode
     
-    init(arcadeAppearance: Bool = true) {
-        self.arcadeAppearance = arcadeAppearance
+    init(mode: AppearanceMode = .arcade) {
+        self.mode = mode
     }
 }

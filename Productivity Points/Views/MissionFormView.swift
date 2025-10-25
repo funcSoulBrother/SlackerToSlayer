@@ -20,6 +20,7 @@ struct MissionFormView: View {
     @State private var firstSuggestion: String = ""
     @State private var secondSuggestion: String = ""
     @State private var thirdSuggestion: String = ""
+    @Query private var appearanceSettings: [AppearanceSettings]
     
     func getThreeUniqueSuggestions() {
         firstSuggestion = RandomMissionSuggestions.all.randomElement()!
@@ -32,10 +33,32 @@ struct MissionFormView: View {
     }
         
     var body: some View {
+        let colorSettings = ColorSettings.shared(in: context)
+        let appearance = appearanceSettings.first ?? {
+            let new = AppearanceSettings()
+            context.insert(new)
+            try? context.save()
+            return new
+        }()
+        
         ZStack {
             Color(UIColor.systemBackground).ignoresSafeArea()
             NavigationStack {
                 VStack(spacing: 20) {
+                    if appearance.mode == .arcade {
+                        Text(model.updating ? "Edit Mission" : "New Mission")
+                            .font(.custom("PressStart2P-Regular", size: 20))
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(colorSettings.accentColor)
+                            .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
+                            .padding()
+                    } else {
+                        Text(model.updating ? "Edit Mission" : "New Mission")
+                            .font(.title)
+                            .fontWeight(.semibold)
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(colorSettings.accentColor)
+                    }
                     LabeledContent {
                         TextField("Name", text: $model.name)
                             .textFieldStyle(.roundedBorder)
@@ -69,6 +92,7 @@ struct MissionFormView: View {
                     }
                     .padding(6)
                     .font(.footnote)
+                    .foregroundStyle(.primary)
                     .background(Color(UIColor.secondarySystemBackground))
                     .cornerRadius(6)
                     .frame(maxWidth: .infinity, alignment: .trailing)
@@ -110,12 +134,12 @@ struct MissionFormView: View {
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .padding(.horizontal)
                     .buttonStyle(.borderedProminent)
+                    .tint(colorSettings.accentColor)
                     .disabled(model.disabled)
                     .padding(.top)
                     Spacer()
                 }
                 .padding()
-                .navigationTitle(model.updating ? "Edit Mission" : "New Mission")
                 .navigationBarTitleDisplayMode(.inline)
                 .onAppear {
                     getThreeUniqueSuggestions()

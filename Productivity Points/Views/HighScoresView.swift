@@ -22,6 +22,7 @@ struct HighScoresView: View {
     @Query(sort: \Mission.points) private var missions: [Mission]
 //    @Query private var settings: [ColorSettings]
     var previewScores: [RankedScore]? = nil
+    var previewAppearance: AppearanceSettings?
     var rankedTopScores: [RankedScore] {
             if let previewScores {
                 return previewScores
@@ -58,10 +59,17 @@ struct HighScoresView: View {
 
     var body: some View {
         let colorSettings = ColorSettings.shared(in: context)
-        let appearance = appearanceSettings.first ?? AppearanceSettings()
+        let appearance = appearanceSettings.first ?? {
+            let new = AppearanceSettings()
+            context.insert(new)
+            try? context.save()
+            return new
+        }()
             ZStack {
+                Color(appearance.mode == .arcade ? "ArcadeBG" : "EasyBG")
+                    .ignoresSafeArea()
                     VStack {
-                        if appearance.arcadeAppearance {
+                        if appearance.mode == .arcade {
                             Text("Top 10 High Scores")
                                 .font(.custom("PressStart2P-Regular", size: 25))
                                 .foregroundStyle(colorSettings.accentColor)
@@ -93,6 +101,7 @@ struct HighScoresView: View {
                         }
                         Spacer()
                     }
+                    .foregroundStyle(colorSettings.accentColor)
                 }
             }
     func formattedDate(_ date: Date) -> String {
@@ -103,9 +112,11 @@ struct HighScoresView: View {
 }
 
 #Preview {
-    HighScoresView(previewScores: RankedScore.samples)
-//        .modelContainer(MissionCompletion.preview)
-        .environment(AppearanceSettings())
-        .environment(ColorSettings())
-//        .modelContainer(Mission.preview)
+    HighScoresView(previewScores: RankedScore.samples, previewAppearance: AppearanceSettings(mode: .arcade))
+
+//    HighScoresView(previewScores: RankedScore.samples)
+////        .modelContainer(MissionCompletion.preview)
+//        .environment(AppearanceSettings())
+//        .environment(ColorSettings())
+////        .modelContainer(Mission.preview)
 }

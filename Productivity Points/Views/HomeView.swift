@@ -20,6 +20,7 @@ struct HomeView: View {
     @Query(sort: \Mission.points) private var missions: [Mission]
 //    @Query private var settings: [ColorSettings]
     let rumble = UIImpactFeedbackGenerator(style: .medium)
+    var previewAppearance: AppearanceSettings?
 //    var totalPointsForSelectedDate: Int {
 //        missions.reduce(0) { total, mission in
 //            isCompleted(mission) ? total + mission.points : total
@@ -46,18 +47,24 @@ struct HomeView: View {
 
     var body: some View {
         let colorSettings = ColorSettings.shared(in: context)
-        let appearance = appearanceSettings.first ?? AppearanceSettings()
+        let appearance = appearanceSettings.first ?? {
+            let new = AppearanceSettings()
+            context.insert(new)
+            try? context.save()
+            return new
+        }()
             NavigationStack {
                 ZStack {
-                    Color(appearance.arcadeAppearance ? "ArcadeBG" : "EasyBG")
+                    Color(appearance.mode == .arcade ? "ArcadeBG" : "EasyBG")
                         .ignoresSafeArea()
                     Group {
                         if missions.isEmpty {
                             ContentUnavailableView("Create your first Mission by tapping on the \(Image(systemName: "plus.circle.fill")) button at the top.", image: "launchScreen")
+                                .foregroundStyle(colorSettings.accentColor)
                             ///insert app icon instead of image: "launchScreen" when it exists
                         } else {
                             VStack {
-                                if appearance.arcadeAppearance {
+                                if appearance.mode == .arcade {
                                     Text("How have you leveled up today?")
                                         .font(.custom("PressStart2P-Regular", size: 20))
                                         .multilineTextAlignment(.center)
@@ -73,60 +80,82 @@ struct HomeView: View {
                                 }
                                 DatePicker("Choose a date", selection: $selectedDate, displayedComponents: .date)
                                     .datePickerStyle(.compact)
-                                    .padding()
-                                
-                                List {
-                                    ForEach(missions) { mission in
-                                        HStack {
-                                            Button(action: {
-                                                toggleCompletion(for: mission)
-                                            }) {
-                                                Image(systemName: isCompleted(mission) ? "checkmark.square.fill" : "square")
+                                    .foregroundStyle(colorSettings.accentColor)
+                                    .accentColor(colorSettings.accentColor) // or any color that contrasts well
+                                    .colorScheme(.dark) // ensures consistent dark appearance
+                                    .padding(.vertical, 5)
+                                    .padding(.horizontal, 20)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(Color.secondary.opacity(0.2))
+                                            .stroke(Color(colorSettings.secondAccentColor), lineWidth: 1)
+                                    )
+                                    .padding(.horizontal, 10)
+                                    List {
+                                        ForEach(missions) { mission in
+                                            HStack {
+                                                Button(action: {
+                                                    toggleCompletion(for: mission)
+                                                }) {
+                                                    Image(systemName: isCompleted(mission) ? "checkmark.square.fill" : "square")
+                                                        .foregroundStyle(isCompleted(mission) ? Color(hex: mission.colorHex) : .gray)
+                                                }
+                                                if isCompleted(mission) {
+                                                    Text("\(mission.name): \(mission.points) pts")
+                                                        .foregroundStyle(Color(hex: mission.colorHex))
+                                                } else {
+                                                    Text("\(mission.name): \(mission.points) pts")
+                                                        .foregroundStyle(.gray)
+                                                }
                                             }
-                                            if isCompleted(mission) {
-                                                Text("\(mission.name): \(mission.points) pts")
-                                                    .foregroundStyle(Color(hex: mission.colorHex))
-                                            } else {
-                                                Text("\(mission.name): \(mission.points) pts")
-                                                    .foregroundStyle(.gray)
+                                            .swipeActions(edge: .trailing) {
+                                                Button(role: .destructive) {
+                                                    missionToDelete = mission
+                                                } label: {
+                                                    Label("Delete", systemImage: "trash")
+                                                }
+                                                Button {
+                                                    modalType = .updateMission(mission)
+                                                } label: {
+                                                    Label("Edit", systemImage: "pencil")
+                                                }
+                                                .tint(.blue)
                                             }
+                                            .listRowBackground(
+                                                Color(appearance.mode == .arcade ? "ArcadeBG" : "EasyBG")
+                                            )
+                                            .listRowSeparator(.hidden)
                                         }
-                                        .swipeActions(edge: .trailing) {
-                                            Button(role: .destructive) {
-                                                missionToDelete = mission
-                                            } label: {
-                                                Label("Delete", systemImage: "trash")
-                                            }
-                                            Button {
-                                                modalType = .updateMission(mission)
-                                            } label: {
-                                                Label("Edit", systemImage: "pencil")
-                                            }
-                                            .tint(.blue)
+                                    }
+                                    .listStyle(.plain)
+                                    .alert("Delete “\(missionToDelete?.name ?? "Mission")”?", isPresented: .constant(missionToDelete != nil), presenting: missionToDelete) { mission in
+                                        Button("No", role: .cancel) {
+                                            missionToDelete = nil
                                         }
-                                        .listRowBackground(
-                                            Color(appearance.arcadeAppearance ? "ArcadeBG" : "EasyBG")
-                                        )
+                                        Button("Yes I'm sure", role: .destructive) {
+                                            deleteMission(mission)
+                                            missionToDelete = nil
+                                        }
+                                    } message: { mission in
+                                        Text("Are you sure you want to delete the mission “\(mission.name)”?\nThis action cannot be undone.")
                                     }
+                                    //            RollingNumber(number: animatedTotalPoints)
+                                    //                .padding(.bottom, 5)
+                                if appearance.mode == .arcade {
+                                    Text("Total Points: \(animatedTotalPoints)")
+                                        .font(.custom("PressStart2P-Regular", size: 18))
+                                        .multilineTextAlignment(.center)
+                                        .foregroundStyle(colorSettings.accentColor)
+                                        .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
+                                        .padding(.bottom, 40)
+                                } else {
+                                    Text("Total Points: \(animatedTotalPoints)")
+                                        .font(.largeTitle)
+                                        .padding(.bottom, 5)
+                                        .transition(.scale)
+                                        .foregroundStyle(colorSettings.accentColor)
+                                        .padding(.bottom, 40)
                                 }
-                                .listStyle(.plain)
-                                .alert("Delete “\(missionToDelete?.name ?? "Mission")”?", isPresented: .constant(missionToDelete != nil), presenting: missionToDelete) { mission in
-                                    Button("No", role: .cancel) {
-                                        missionToDelete = nil
-                                    }
-                                    Button("Yes I'm sure", role: .destructive) {
-                                        deleteMission(mission)
-                                        missionToDelete = nil
-                                    }
-                                } message: { mission in
-                                    Text("Are you sure you want to delete the mission “\(mission.name)”?\nThis action cannot be undone.")
-                                }
-                                //            RollingNumber(number: animatedTotalPoints)
-                                //                .padding(.bottom, 5)
-                                Text("Total Points: \(animatedTotalPoints)")
-                                    .font(.headline)
-                                    .padding(.bottom, 5)
-                                    .transition(.scale)
 //                                if let highScore = highScore {
 //                                    VStack {
 //                                        Text("🏆 High Score")
@@ -155,18 +184,28 @@ struct HomeView: View {
                         }
                     }
                     .toolbar {
-                        Button {
-                            modalType = .newMission
-                        } label: {
-                            Image(systemName: "plus.circle.fill")
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button {
+                                modalType = .newMission
+                            } label: {
+                                Image(systemName: "plus.circle.fill")
+                            }
                         }
-                        .sheet(item: $modalType) { sheet in
-                            sheet
-                                .presentationDetents([.height(550)])
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button {
+                                modalType = .help
+                            } label: {
+                                Image(systemName: "questionmark.circle.fill")
+                            }
                         }
+                    }
+                    .sheet(item: $modalType) { sheet in
+                        sheet
+                            .presentationDetents(sheet == .help ? [.large] : [.height(550)])
                     }
                 }
             }
+            .preferredColorScheme(appearance.mode == .arcade ? .dark : nil)
 //            .navigationBarTitleDisplayMode(.inline)
 //            .toolbarBackground(.clear, for: .navigationBar)
 //            .toolbarBackground(.visible, for: .navigationBar)
@@ -179,7 +218,12 @@ struct HomeView: View {
 
     // Add/remove a completion
     func toggleCompletion(for mission: Mission) {
-        let appearance = appearanceSettings.first ?? AppearanceSettings()
+        let appearance = appearanceSettings.first ?? {
+            let new = AppearanceSettings()
+            context.insert(new)
+            try? context.save()
+            return new
+        }()
         if let existing = mission.completions.first(where: {
             Calendar.current.isDate($0.date, inSameDayAs: selectedDate)
         }) {
@@ -190,7 +234,7 @@ struct HomeView: View {
             mission.completions.append(newCompletion)
             
             //
-            SoundManager.shared.playSound(named: appearance.arcadeAppearance ? "AffirmativeArcade" : "AffirmativeNormal")
+            SoundManager.shared.playSound(named: appearance.mode == .arcade ? "AffirmativeArcade" : "AffirmativeNormal")
             rumble.impactOccurred()
         }
 
@@ -224,9 +268,8 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    HomeView(previewAppearance: AppearanceSettings(mode: .arcade))
         .modelContainer(Mission.preview)
-        .environment(AppearanceSettings())
         .environment(ColorSettings())
 }
 
