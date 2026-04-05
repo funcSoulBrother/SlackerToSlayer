@@ -16,7 +16,7 @@ struct OnboardingScreen: View {
                 .ignoresSafeArea()
             ScrollView {
                 VStack(alignment: .center) {
-                    Text("Welcome to Productivity Points!")
+                    Text("This is Slacker to Slayer!")
                         .font(.custom("PressStart2P-Regular", size: 25))
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.blue)
@@ -28,7 +28,7 @@ struct OnboardingScreen: View {
                         Image(systemName: "map.fill")
                             .font(.title)
                             .foregroundStyle(.arcadeBG)
-                        Text("A productivity app that lets you give yourself points for tasks you want to do every day. Beat your high score!")
+                        Text("A productivity app that lets you give yourself points for tasks you want to do every day.")
                             .font(.headline)
                             .fontWeight(.light)
                             .foregroundStyle(.blue)
@@ -44,10 +44,10 @@ struct OnboardingScreen: View {
                     }
                     .padding()
                     HStack{
-                        Image(systemName: "paintpalette")
+                        Image(systemName: "flag.pattern.checkered")
                             .font(.title)
                             .foregroundColor(.white)
-                        Text("Go to the Settings tab to customize the look of Productivity Points.")
+                        Text("Earn enough points and you'll level up. Challenge yourself to get from Level 1 (Slacker) to Level ??? (Slayer)!")
                             .font(.title3)
                             .fontWeight(.light)
                     }
@@ -56,7 +56,7 @@ struct OnboardingScreen: View {
                         Image(systemName: "trophy")
                             .font(.title)
                             .foregroundColor(.white)
-                        Text("Go to the High Scores or Monthly Scores tabs to look back on your achievements!")
+                        Text("Go to the High Scores or Monthly Scores tabs to look back on your achievements or see your current streak!")
                             .font(.title3)
                             .fontWeight(.light)
                     }

@@ -10,6 +10,7 @@ import SwiftData
 
 struct HighScoresView: View {
     @Environment(\.modelContext) private var context
+    @EnvironmentObject var progressManager: ProgressManager
 //    @EnvironmentObject var appearanceSettings: AppearanceSettings
 //    @Environment(ColorSettings.self) var colorSettings
 //    @State private var monthDate = Date.now
@@ -23,6 +24,11 @@ struct HighScoresView: View {
 //    @Query private var settings: [ColorSettings]
     var previewScores: [RankedScore]? = nil
     var previewAppearance: AppearanceSettings?
+    var totalPointsEarned: Int {
+        missions.reduce(0) { total, mission in
+            total + (mission.completions.count * mission.points)
+        }
+    }
     var rankedTopScores: [RankedScore] {
             if let previewScores {
                 return previewScores
@@ -65,43 +71,161 @@ struct HighScoresView: View {
             try? context.save()
             return new
         }()
+        let currentLevel = LevelSystem.level(for: totalPointsEarned)
+        let nextLevel = LevelSystem.nextLevel(after: currentLevel)
+        let currentXP = totalPointsEarned - currentLevel.requiredPoints
+        let totalXP = nextLevel.requiredPoints - currentLevel.requiredPoints
             ZStack {
                 Color(appearance.mode == .arcade ? "ArcadeBG" : "EasyBG")
                     .ignoresSafeArea()
                     VStack {
+                        //Level stats
                         if appearance.mode == .arcade {
-                            Text("Top 10 High Scores")
+                            Text("Level \(currentLevel.number)")
+                                .font(.custom("PressStart2P-Regular", size: 25))
+                                .foregroundStyle(colorSettings.accentColor)
+                                .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
+                                .padding(.top, 15)
+                            Text("\(currentLevel.precedingSentence)")
+                                .font(.custom("PressStart2P-Regular", size: 13))
+                                .foregroundStyle(colorSettings.accentColor)
+                                .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
+                                .padding(.top, 5)
+                            Text("\(currentLevel.title)")
                                 .font(.custom("PressStart2P-Regular", size: 25))
                                 .foregroundStyle(colorSettings.accentColor)
                                 .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
                                 .multilineTextAlignment(.center)
-                                .padding()
+                                .padding(.top, 6)
+                                .padding(.bottom, 10)
                         } else {
-                            Text("Top 10 Days")
+                            Text("Level \(currentLevel.number)")
+                                .font(.largeTitle)
+                                .fontWeight(.semibold)
+                                .foregroundStyle(colorSettings.accentColor)
+                                .padding(.top, 20)
+                            Text("\(currentLevel.precedingSentence)")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .multilineTextAlignment(.center)
+                                .foregroundStyle(colorSettings.accentColor)
+//                                .padding(.top, 5)
+                            Text("\(currentLevel.title)")
                                 .font(.largeTitle)
                                 .fontWeight(.semibold)
                                 .multilineTextAlignment(.center)
                                 .foregroundStyle(colorSettings.accentColor)
-                                .padding(.bottom, 40)
+//                                .padding(.top, 6)
+                                .padding(.bottom, 10)
+                        }
+                        //Progress bar
+                        ProgressView(value: LevelSystem.progress(for: totalPointsEarned))
+                            .padding(.horizontal, 20)
+                        if appearance.mode == .arcade {
+                            if currentLevel.number == nextLevel.number {
+                                Text("MAX LEVEL")
+                                    .font(.custom("PressStart2P-Regular", size: 25))
+                                    .foregroundStyle(colorSettings.accentColor)
+                                    .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
+                                    .padding(.top, 5)
+                            } else {
+                                Text("\(currentXP) / \(totalXP) XP")
+                                    .font(.custom("PressStart2P-Regular", size: 25))
+                                    .foregroundStyle(colorSettings.accentColor)
+                                    .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
+                                    .padding(.top, 5)
+                            }
+                        } else {
+                            if currentLevel.number == nextLevel.number {
+                                Text("MAX LEVEL")
+                                    .font(.largeTitle)
+                                    .fontWeight(.semibold)
+                                    .foregroundStyle(colorSettings.accentColor)
+                                    .padding(.top, 5)
+                            } else {
+                                Text("\(currentXP) / \(totalXP) XP")
+                                    .font(.largeTitle)
+                                    .fontWeight(.semibold)
+                                    .foregroundStyle(colorSettings.accentColor)
+                                    .padding(.top, 5)
+                            }
+                        }
+                        //All Points Ever
+                        if appearance.mode == .arcade {
+                            Text("Total Points:")
+                                .font(.custom("PressStart2P-Regular", size: 25))
+                                .foregroundStyle(colorSettings.accentColor)
+                                .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 10)
+                                .padding(.bottom, 5)
+                                .padding(.top, 10)
+                            Text("\(totalPointsEarned)")
+                                .font(.custom("PressStart2P-Regular", size: 25))
+                                .foregroundStyle(colorSettings.accentColor)
+                                .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
+                        } else {
+                            Text("Total Points:")
+                                .font(.title)
+                                .fontWeight(.semibold)
+                                .multilineTextAlignment(.center)
+                                .foregroundStyle(colorSettings.accentColor)
+                                .padding(.top, 5)
+                            Text("\(totalPointsEarned)")
+                                .font(.largeTitle)
+                                .fontWeight(.semibold)
+                                .foregroundStyle(colorSettings.accentColor)
+//                                .padding(.bottom, 5)
+                        }
+                        //Top 10
+                        if appearance.mode == .arcade {
+                            Text("High Scores")
+                                .font(.custom("PressStart2P-Regular", size: 25))
+                                .foregroundStyle(colorSettings.secondAccentColor)
+                                .shadow(color: colorSettings.secondAccentColor.opacity(0.8), radius: 10, x: 0, y: 0)
+                                .multilineTextAlignment(.center)
+                                .padding(.top, 30)
+                                .padding()
+                        } else {
+                            Divider()
+                                .padding(.horizontal, 10)
+                            Text("Top 10 Days")
+                                .font(.largeTitle)
+                                .fontWeight(.semibold)
+                                .multilineTextAlignment(.center)
+                                .foregroundStyle(colorSettings.secondAccentColor)
+//                                .padding(.top, 10)
+                                .padding(.bottom, 10)
                         }
                         if rankedTopScores.isEmpty {
-                            ContentUnavailableView("You haven't done anything yet so there are no high scores. Get out there and do stuff!", systemImage: "figure.run")
+                            Text("You haven't done anything yet so there are no high scores. Get out there and do stuff!")
+                                .monospaced()
+                                .padding(.horizontal, 30)
+//                            ContentUnavailableView("You haven't done anything yet so there are no high scores. Get out there and do stuff!", systemImage: "figure.run")
                         } else {
                             ForEach(rankedTopScores.prefix(10), id: \.date) { score in
                                 HStack {
+                                    // Rank column
                                     Text("\(score.rank).")
                                         .bold()
-                                        .font(.title3)
-                                    Text("\(score.date.formatted(.dateTime.month().day().year())) - \(score.totalPoints) pts")
-                                        .font(.title3)
-                                        Spacer()
+                                        .frame(width: 40, alignment: .leading)
+                                        .monospaced()
+                                    // Date column
+                                    Text(score.date.formatted(.dateTime.month().day().year()))
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .monospaced()
+                                    // Points column (right aligned)
+                                    Text("\(score.totalPoints) pts")
+                                        .frame(width: 100, alignment: .trailing)
+                                        .monospaced()
                                 }
-                                .padding(.leading, 50)
+                                .font(.headline)
+                                .padding(.horizontal, 25)
                             }
                         }
                         Spacer()
                     }
-                    .foregroundStyle(colorSettings.accentColor)
+                    .foregroundStyle(colorSettings.secondAccentColor)
                 }
             }
     func formattedDate(_ date: Date) -> String {
@@ -113,6 +237,7 @@ struct HighScoresView: View {
 
 #Preview {
     HighScoresView(previewScores: RankedScore.samples, previewAppearance: AppearanceSettings(mode: .arcade))
+        .environmentObject(ProgressManager())
 
 //    HighScoresView(previewScores: RankedScore.samples)
 ////        .modelContainer(MissionCompletion.preview)

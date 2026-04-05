@@ -54,7 +54,7 @@ struct HelpView: View {
                     HStack {
                         Image(systemName: "calendar")
                             .font(.title)
-                        Text("The Home screen will default to today's date. To go to a past date (or a future date for some reason) tap on the date at the top to pick a new date.")
+                        Text("The Home screen will default to today's date. To go to a past date (or a future date for some reason) tap on the date at the top to pick a new date. You can also click on the arrows to go back or forward one day.")
                     }
                     HStack {
                         Image(systemName: "checkmark.square.fill")
@@ -64,12 +64,7 @@ struct HelpView: View {
                     HStack {
                         Image(systemName: "pencil")
                             .font(.title)
-                        Text("To edit a Mission, left swipe on the Mission you want to edit and tap the blue Edit button marked witht he pencil icon.")
-                    }
-                    HStack {
-                        Image(systemName: "trash")
-                            .font(.title)
-                        Text("To delete a Mission, left swipe on the Mission you want to delete and tap the red Delete button marked with the trash icon.")
+                        Text("To edit or delete a Mission, left swipe on the Mission to want to edit or delete and tap on the pencil to edit it or the trash can to delete it.")
                     }
                     VStack (alignment: .center) {
                         if appearance.mode == .arcade {

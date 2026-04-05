@@ -17,10 +17,15 @@ struct MissionFormView: View {
         formatter.numberStyle = .none
         return formatter }()
 //    @State private var selectingIcon: Bool = false
+    @State private var pointsText: String = ""
     @State private var firstSuggestion: String = ""
     @State private var secondSuggestion: String = ""
     @State private var thirdSuggestion: String = ""
     @Query private var appearanceSettings: [AppearanceSettings]
+    let colors: [Color] = [
+        .blue, .mint, .green,
+        .yellow, .orange, .red, .pink, .purple, .indigo
+    ]
     
     func getThreeUniqueSuggestions() {
         firstSuggestion = RandomMissionSuggestions.all.randomElement()!
@@ -69,16 +74,26 @@ struct MissionFormView: View {
                         Text("Suggestions: \(firstSuggestion), \(secondSuggestion), \(thirdSuggestion)")
                             .foregroundStyle(.secondary)
                             .font(.caption)
+                            .lineLimit(2)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .multilineTextAlignment(.leading)
                     }
                     LabeledContent {
-                        TextField("Points", value: $model.points, formatter: intFormatter)
+                        TextField("Points", text: $pointsText)
                             .textFieldStyle(.roundedBorder)
                             .keyboardType(.numberPad)
-                            .onChange(of: model.points) { newValue in
-                                if model.points > 25 {
-                                    model.points = 25
-                                } else if model.points < 1 {
-                                    model.points = 1
+                            .onChange(of: pointsText) { newValue in
+                                let filtered = newValue.filter { $0.isNumber }
+                                if filtered != newValue {
+                                    pointsText = filtered
+                                    return
+                                }
+                                if let value = Int(filtered) {
+                                    let clamped = min(max(value, 1), 25)
+                                    model.points = clamped
+                                    pointsText = String(clamped)
+                                } else {
+                                    model.points = nil
                                 }
                             }
                     } label: {
@@ -97,7 +112,15 @@ struct MissionFormView: View {
                     .cornerRadius(6)
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .sheet(isPresented: $showingPointsGenerator) {
-                        ExploringPointsGenerator(points: $model.points)
+                        ExploringPointsGenerator(
+                            points: Binding(
+                                get: { model.points ?? 1 },
+                                set: { newValue in
+                                    model.points = newValue
+                                    pointsText = String(newValue)
+                                }
+                            )
+                        )
                     }
                     LabeledContent {
                         ColorPicker("", selection: $model.colorHex, supportsOpacity: false)
@@ -105,23 +128,35 @@ struct MissionFormView: View {
                         Text("Color")
                     }
                     .padding(.top)
+                    HStack(spacing: 12) {
+                        ForEach(colors, id: \.self) { color in
+                            ColorButton(
+                                color: color,
+                                selectedColor: $model.colorHex
+                            )
+                        }
+                    }
                     Button(model.updating ? "Update" : "Create") {
+                        guard let points = model.points else {
+                            return
+                        }
+
                         if model.updating {
                             model.mission?.name = model.name
-                            model.mission?.points = model.points
+                            model.mission?.points = points
                             model.mission?.colorHex = model.colorHex.toHex()!
                         } else {
-                            print("Creating mission: \(model.name), \(model.points) points")
+                            print("Creating mission: \(model.name), \(points) points")
+
                             let newMission = Mission(
                                 id: UUID(),
                                 name: model.name,
-                                points: model.points,
+                                points: points,
                                 colorHex: model.colorHex.toHex()!
                             )
+
                             context.insert(newMission)
-                            print("Mission inserted into context")
-                            
-                            // Force save and check for errors
+
                             do {
                                 try context.save()
                                 print("Mission saved successfully")
@@ -129,8 +164,10 @@ struct MissionFormView: View {
                                 print("Error saving mission: \(error)")
                             }
                         }
+
                         dismiss()
                     }
+                    .disabled(model.disabled)
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .padding(.horizontal)
                     .buttonStyle(.borderedProminent)
@@ -143,6 +180,7 @@ struct MissionFormView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .onAppear {
                     getThreeUniqueSuggestions()
+                    pointsText = model.points.map { String($0) } ?? ""
                 }
             }
             /*if selectingIcon {

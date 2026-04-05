@@ -34,6 +34,7 @@ struct CalendarHeaderView: View {
             .map { $0.mission.points }
             .reduce(0, +)
     }
+
     ///delete this later!
 //    var highScore: (date: Date, totalPoints: Int)? {
 //        // Step 1: Create a [Date: Int] dictionary to sum points
@@ -60,33 +61,35 @@ struct CalendarHeaderView: View {
             try? context.save()
             return new
         }()
+        let currentStreak = StreakCalculator.currentStreak(from: missionCompletions)
+        let longestStreak = StreakCalculator.longestStreak(from: missionCompletions)
         NavigationStack {
         ZStack {
             Color(appearance.mode == .arcade ? "ArcadeBG" : "EasyBG")
                 .ignoresSafeArea()
                 VStack {
-                    if appearance.mode == .arcade {
-                        Text("Monthly Scores")
-                            .font(.custom("PressStart2P-Regular", size: 23))
-                            .multilineTextAlignment(.center)
-                            .foregroundStyle(colorSettings.accentColor)
-                            .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
-                            .padding(.top, 40)
-                            .padding(.bottom, 30)
-                    } else {
-                        Text("Monthly Scores")
-                            .font(.largeTitle)
-                            .fontWeight(.semibold)
-                            .multilineTextAlignment(.center)
-                            .foregroundStyle(colorSettings.accentColor)
-                            .padding(.top, 40)
-                            .padding(.bottom, 30)
-                    }
+                    ///Get rid of Monthly Scores title for space?
+//                    if appearance.mode == .arcade {
+//                        Text("Monthly Scores")
+//                            .font(.custom("PressStart2P-Regular", size: 23))
+//                            .multilineTextAlignment(.center)
+//                            .foregroundStyle(colorSettings.accentColor)
+//                            .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
+//                            .padding(.top, 40)
+//                            .padding(.bottom, 30)
+//                    } else {
+//                        Text("Monthly Scores")
+//                            .font(.largeTitle)
+//                            .fontWeight(.semibold)
+//                            .multilineTextAlignment(.center)
+//                            .foregroundStyle(colorSettings.accentColor)
+//                            .padding(.top, 40)
+//                            .padding(.bottom, 30)
+//                    }
                     HStack {
                         Picker("", selection: $selectedMonth) {
                             ForEach(months.indices, id: \.self) { index in
                                 Text(months[index])
-                                    .foregroundStyle(.orange)
                                     .tag(index + 1)
                             }
                         }
@@ -97,30 +100,41 @@ struct CalendarHeaderView: View {
                             }
                         }
                     }
-                    .tint(.orange)
+                    .tint(colorSettings.accentColor)
                     .buttonStyle(.bordered)
 
                     CalendarView(date: monthDate)
                         .id(monthDate)
                     //                , selectedActivity: selectedActivity)
-                    Spacer()
 //                    Text("Total Monthly Points: \(totalPointsForSelectedMonth)")
 //                        .font(.headline)
 //                        .padding(.top, 8)
                     if appearance.mode == .arcade {
-                        Text("Total Monthly Points: \(totalPointsForSelectedMonth)")
+                        Group {
+                            Text("Total Monthly Points: \(totalPointsForSelectedMonth)")
+                                .padding(.top, 20)
+                            Text("Current Streak: \(currentStreak)")
+                                .padding(.top, 30)
+                            Text("Longest Streak: \(longestStreak)")
+                                .padding(.top, 10)
+                        }
                             .font(.custom("PressStart2P-Regular", size: 18))
                             .multilineTextAlignment(.center)
                             .foregroundStyle(colorSettings.accentColor)
                             .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
-                            .padding(.bottom, 40)
                     } else {
-                        Text("Total Monthly Points: \(totalPointsForSelectedMonth)")
-                            .font(.largeTitle)
-                            .padding(.bottom, 5)
+                        Group {
+                            Text("Total Monthly Points: \(totalPointsForSelectedMonth)")
+                                .padding(.top, 20)
+                            Text("Current Streak: \(currentStreak)")
+                                .padding(.top, 30)
+                            Text("Longest Streak: \(longestStreak)")
+                                .padding(.top, 10)
+                        }
+                            .font(.title)
                             .transition(.scale)
                             .foregroundStyle(colorSettings.accentColor)
-                            .padding(.bottom, 40)
+                            .fontWeight(.semibold)
                     }
                 }
             }

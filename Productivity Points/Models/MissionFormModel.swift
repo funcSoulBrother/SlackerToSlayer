@@ -12,7 +12,7 @@ class MissionFormModel {
     var name = ""
 //    var icon = ""
     var colorHex: Color = .red
-    var points = 1
+    var points: Int? = nil
     
     var mission: Mission?
     
@@ -28,6 +28,6 @@ class MissionFormModel {
     }
     
     var disabled: Bool {
-        name.isEmpty
+        name.isEmpty || points == nil
     }
 }

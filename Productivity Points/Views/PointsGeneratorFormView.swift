@@ -12,7 +12,7 @@ import SwiftData
 let howLong = [
     QuestionnaireOption(label: "Quick", value: 1),
     QuestionnaireOption(label: "Pretty Long", value: 2),
-    QuestionnaireOption(label: "Possibly All Day", value: 3)
+    QuestionnaireOption(label: "All Day", value: 3)
 ]
 
 let howEnjoyable = [

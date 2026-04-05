@@ -48,11 +48,13 @@ struct ProductivityPoints: App {
         
         return container
     }()
+    @StateObject var progressManager = ProgressManager()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .modelContainer(container)
+                .environmentObject(progressManager)
         }
     }
 }

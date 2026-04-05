@@ -13,7 +13,7 @@ class ColorSettings {
     var accentColorHex: String
     var secondAccentColorHex: String
     
-    init(accentColor: Color = .blue, secondAccentColor: Color = .red) {
+    init(accentColor: Color = .blue, secondAccentColor: Color = .mint) {
         self.accentColorHex = accentColor.toHex() ?? "0000FF" // blue default
         self.secondAccentColorHex = secondAccentColor.toHex() ?? "FF0000" // red default
     }

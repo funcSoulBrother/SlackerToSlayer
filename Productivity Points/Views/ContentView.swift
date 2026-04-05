@@ -9,10 +9,11 @@ import SwiftUI
 import SwiftData
 //import UserNotifications
 import AppTrackingTransparency
+import AdSupport
 
 struct ContentView: View {
     
-    @AppStorage("LastSelectedTab") var savedSelectedTab: Int = 2
+    @AppStorage("LastSelectedTab") var savedSelectedTab: Int = 0
 //        @Environment(ColorSettings.self) var colorSettings
 //    @EnvironmentObject var appearanceSettings: AppearanceSettings
     @Environment(\.modelContext) private var context
@@ -36,19 +37,19 @@ struct ContentView: View {
 //        }()
         
         TabView(selection: $savedSelectedTab) {
-            HighScoresView()
+            HomeView()
                 .tabItem {
-                    Label("High Scores", systemImage: "trophy.fill")
+                    Label("Home", systemImage: "house.fill")
                 }
                 .tag(0)
             CalendarHeaderView()
                 .tabItem {
-                    Label("Monthly Scores", systemImage: "calendar")
+                    Label("Monthly + Streaks", systemImage: "calendar")
                 }
                 .tag(1)
-            HomeView()
+            HighScoresView()
                 .tabItem {
-                    Label("Home", systemImage: "house.fill")
+                    Label("High Scores", systemImage: "trophy.fill")
                 }
                 .tag(2)
             SettingsView()
@@ -57,9 +58,11 @@ struct ContentView: View {
                 }
                 .tag(3)
         }
-        .onAppear() {
-            print("wow, the view is appearing. Neat!")
-            requestPermission()
+        .onAppear {
+            // Small delay to let UI settle
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                requestTrackingPermission()
+            }
         }
 
         .accentColor(colorSettings.accentColor)
@@ -70,12 +73,24 @@ struct ContentView: View {
         }
     }
 
-func requestPermission() {
-    if #available(iOS 14, *) {
-        print("Main thread: \(Thread.isMainThread)")
-        DispatchQueue.main.async {
-            ATTrackingManager.requestTrackingAuthorization { status in
-                print("Status: \(status.rawValue), Main thread in callback: \(Thread.isMainThread)")
+func requestTrackingPermission() {
+    // Only request on iOS 14.5+
+    if #available(iOS 14.5, *) {
+        ATTrackingManager.requestTrackingAuthorization { status in
+            switch status {
+            case .authorized:
+                print("Tracking authorized")
+                // You can now access IDFA
+                let idfa = ASIdentifierManager.shared().advertisingIdentifier
+                print("IDFA: \(idfa)")
+            case .denied:
+                print("Tracking denied")
+            case .notDetermined:
+                print("Tracking not determined")
+            case .restricted:
+                print("Tracking restricted")
+            @unknown default:
+                print("Unknown tracking status")
             }
         }
     }

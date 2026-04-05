@@ -116,7 +116,7 @@ struct SettingsView: View {
                         Button("Yes I'm sure") {
                             appearance.mode = .arcade
                             colorSettings.accentColor = .blue
-                            colorSettings.secondAccentColor = .red
+                            colorSettings.secondAccentColor = .mint
                             try? context.save()
                         }
                     } message: {
