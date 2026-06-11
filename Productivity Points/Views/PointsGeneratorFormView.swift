@@ -8,7 +8,6 @@
 import SwiftUI
 import SwiftData
 
-// Static options (defined once, not on every redraw)
 let howLong = [
     QuestionnaireOption(label: "Quick", value: 1),
     QuestionnaireOption(label: "Pretty Long", value: 2),

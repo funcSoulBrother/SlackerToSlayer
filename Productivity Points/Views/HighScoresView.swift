@@ -11,17 +11,8 @@ import SwiftData
 struct HighScoresView: View {
     @Environment(\.modelContext) private var context
     @EnvironmentObject var progressManager: ProgressManager
-//    @EnvironmentObject var appearanceSettings: AppearanceSettings
-//    @Environment(ColorSettings.self) var colorSettings
-//    @State private var monthDate = Date.now
-//    @State private var years: [Int] = []
-//    @State private var selectedMonth = Date.now.monthInt
-//    @State private var selectedYear = Date.now.yearInt
-//    let months = Date.fullMonthNames
-//    @Query private var missionCompletions: [MissionCompletion]
     @Query private var appearanceSettings: [AppearanceSettings]
     @Query(sort: \Mission.points) private var missions: [Mission]
-//    @Query private var settings: [ColorSettings]
     var previewScores: [RankedScore]? = nil
     var previewAppearance: AppearanceSettings?
     var totalPointsEarned: Int {
@@ -109,13 +100,11 @@ struct HighScoresView: View {
                                 .fontWeight(.semibold)
                                 .multilineTextAlignment(.center)
                                 .foregroundStyle(colorSettings.accentColor)
-//                                .padding(.top, 5)
                             Text("\(currentLevel.title)")
                                 .font(.largeTitle)
                                 .fontWeight(.semibold)
                                 .multilineTextAlignment(.center)
                                 .foregroundStyle(colorSettings.accentColor)
-//                                .padding(.top, 6)
                                 .padding(.bottom, 10)
                         }
                         //Progress bar

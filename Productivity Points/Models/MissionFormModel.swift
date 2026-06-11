@@ -10,7 +10,6 @@ import SwiftUI
 @Observable
 class MissionFormModel {
     var name = ""
-//    var icon = ""
     var colorHex: Color = .red
     var points: Int? = nil
     

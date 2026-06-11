@@ -9,11 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct SettingsView: View {
-//    @State var accentColor: Color = .blue
-//    @EnvironmentObject var appearanceSettings: AppearanceSettings
-//    @Environment(ColorSettings.self) var colorSettings
     @Environment(\.modelContext) private var context
-//    @Query private var settings: [ColorSettings]
     @Query private var appearanceSettings: [AppearanceSettings]
     @State var showResetToDefaultsAlert = false
     var previewAppearance: AppearanceSettings?
@@ -35,26 +31,11 @@ struct SettingsView: View {
                         .font(.largeTitle)
                         .foregroundStyle(.blue)
                 }
-//                Text("Appearance Mode")
-//                    .font(.headline)
-//                    .foregroundStyle(appearance.arcadeAppearance ? Color("ArcadeText") : .primary)
-//                
-//                Picker("Appearance", selection: Binding(
-//                    get: { appearance.arcadeAppearance },
-//                    set: { appearance.arcadeAppearance = $0 }
-//                )) {
-//                    Text("Arcade").tag(true)
-//                    Text("Normal").tag(false)
-//                }
-//                .pickerStyle(.segmented)
-//                .tint(.blue)
-                
                 Text("Appearance Mode")
                                     .font(.headline)
                                     .fontWeight(.bold)
                                     .foregroundStyle(.blue)
 
-                                // Custom arcade-style toggle
                                 HStack(spacing: 0) {
                                     ForEach(AppearanceMode.allCases, id: \.self) { mode in
                                         Button {
@@ -130,29 +111,7 @@ struct SettingsView: View {
     }
 }
 
-//#Preview {
-//    SettingsView()
-//        .environment(ColorSettings())
-//        .environment(AppearanceSettings())
-//}
-
-//#Preview {
-//    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-//    let container = try! ModelContainer(for: AppearanceSettings.self, configurations: config)
-//    let context = container.mainContext
-//
-//    let mock = AppearanceSettings(mode: .arcade)
-//    context.insert(mock)
-//
-//    return SettingsView()
-//        .modelContainer(container)
-//}
-
 #Preview("Arcade Mode") {
     SettingsView(previewAppearance: AppearanceSettings(mode: .arcade))
         .environment(ColorSettings())
 }
-
-//#Preview("Normal Mode") {
-//    SettingsView(previewAppearance: AppearanceSettings(mode: .normal))
-//}

@@ -11,14 +11,7 @@ import SwiftData
 struct HelpView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) private var context
-    //    @EnvironmentObject var appearanceSettings: AppearanceSettings
-    //    @Environment(ColorSettings.self) var colorSettings
-    //    @State private var selectedDate = Date()
-    ///@State private var modalType: ModalType?
-    //    @State private var showMissionDeleteAlert = false
-    //    @State private var missionToDelete: Mission?
     @Query private var appearanceSettings: [AppearanceSettings]
-    //    @Query(sort: \Mission.points) private var missions: [Mission]
     
     var body: some View {
         let colorSettings = ColorSettings.shared(in: context)
@@ -49,7 +42,7 @@ struct HelpView: View {
                     HStack {
                         Image(systemName: "plus.circle.fill")
                             .font(.title)
-                        Text("To create a new Mission, tap the \(Image(systemName: "plus.circle.fill")) button on the top right of the Home screen.")
+                        Text("To create a new Mission, tap the \(Image(systemName: "plus.circle.fill")) button on the bottom right of the Home screen.")
                     }
                     HStack {
                         Image(systemName: "calendar")
@@ -64,7 +57,7 @@ struct HelpView: View {
                     HStack {
                         Image(systemName: "pencil")
                             .font(.title)
-                        Text("To edit or delete a Mission, left swipe on the Mission to want to edit or delete and tap on the pencil to edit it or the trash can to delete it.")
+                        Text("To edit or delete a Mission, left swipe on the Mission you want to edit or delete and tap on the pencil to edit it or the trash can to delete it.")
                     }
                     VStack (alignment: .center) {
                         if appearance.mode == .arcade {

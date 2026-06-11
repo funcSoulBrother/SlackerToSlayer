@@ -14,27 +14,15 @@ import AdSupport
 struct ContentView: View {
     
     @AppStorage("LastSelectedTab") var savedSelectedTab: Int = 0
-//        @Environment(ColorSettings.self) var colorSettings
-//    @EnvironmentObject var appearanceSettings: AppearanceSettings
     @Environment(\.modelContext) private var context
     @Query private var appearanceSettings: [AppearanceSettings]
-//        @Query private var settings: [ColorSettings]
     @AppStorage("OnboardingScreenShows") private var willOnboardingScreenShow = true
-//    var settings = SettingsView()
     private var colorSettings: ColorSettings {
         ColorSettings.shared(in: context)
     }
     var previewAppearance: AppearanceSettings?
     
     var body: some View {
-//        //setting up default accent colors:
-//        let colorSettings = settings.first ?? {
-//            // If none exist, create one with blue/red
-//            let defaults = ColorSettings()
-//            context.insert(defaults)
-//            try? context.save()
-//            return defaults
-//        }()
         
         TabView(selection: $savedSelectedTab) {
             HomeView()
@@ -131,6 +119,7 @@ func requestTrackingPermission() {
 
 #Preview {
     ContentView(previewAppearance: AppearanceSettings(mode: .arcade))
+        .environmentObject(ProgressManager())
         .environment(ColorSettings())
         .modelContainer(Mission.preview)
         .modelContainer(MissionCompletion.preview)

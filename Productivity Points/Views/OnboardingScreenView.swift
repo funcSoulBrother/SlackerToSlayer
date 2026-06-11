@@ -38,7 +38,7 @@ struct OnboardingScreen: View {
                         Image(systemName: "star")
                             .font(.title)
                             .foregroundStyle(.white)
-                        Text("Think of tasks you want to do every day. These are called Missions in Productivity Points. Add a mission by hitting the \(Image(systemName: "plus.circle.fill")) button on top of the home screen. Once you’ve completed a mission, simply check it off the list.")
+                        Text("Think of tasks you want to do every day. These are called Missions in Slacker to Slayer. Add a mission by hitting the \(Image(systemName: "plus.circle.fill")) button on the bottom right corner of the home screen. Once you’ve completed a mission, simply check it off the list.")
                             .font(.title3)
                             .fontWeight(.light)
                     }
@@ -47,7 +47,7 @@ struct OnboardingScreen: View {
                         Image(systemName: "flag.pattern.checkered")
                             .font(.title)
                             .foregroundColor(.white)
-                        Text("Earn enough points and you'll level up. Challenge yourself to get from Level 1 (Slacker) to Level ??? (Slayer)!")
+                        Text("Earn enough points and you'll level up. Challenge yourself to get from Level 1 (Slacker) to Level 20 (Slayer)!")
                             .font(.title3)
                             .fontWeight(.light)
                     }

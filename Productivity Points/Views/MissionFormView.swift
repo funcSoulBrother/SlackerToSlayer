@@ -16,7 +16,6 @@ struct MissionFormView: View {
         let formatter = NumberFormatter()
         formatter.numberStyle = .none
         return formatter }()
-//    @State private var selectingIcon: Bool = false
     @State private var pointsText: String = ""
     @State private var firstSuggestion: String = ""
     @State private var secondSuggestion: String = ""
@@ -183,10 +182,6 @@ struct MissionFormView: View {
                     pointsText = model.points.map { String($0) } ?? ""
                 }
             }
-            /*if selectingIcon {
-                ActivityIconSelectionView(selectingIcon: $selectingIcon, selectedIcon: $model.icon)
-                    .zIndex(1.0)
-            }*/
         }
     }
 }
