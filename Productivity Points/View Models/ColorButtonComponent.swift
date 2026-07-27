@@ -26,7 +26,7 @@ struct ColorButton: View {
                 .overlay {
                     if isSelected {
                         Circle()
-                            .stroke(.white, lineWidth: 3)
+                            .stroke(.secondary, lineWidth: 5)
                     }
                 }
         }

@@ -82,11 +82,12 @@ struct HighScoresView: View {
                                 .foregroundStyle(colorSettings.accentColor)
                                 .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
                                 .padding(.top, 5)
-                            Text("\(currentLevel.title)")
+                            Text("\(currentLevel.displayTitle)")
                                 .font(.custom("PressStart2P-Regular", size: 25))
                                 .foregroundStyle(colorSettings.accentColor)
                                 .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
                                 .multilineTextAlignment(.center)
+                                .fixedSize(horizontal: false, vertical: true)
                                 .padding(.top, 6)
                                 .padding(.bottom, 10)
                         } else {
@@ -100,12 +101,14 @@ struct HighScoresView: View {
                                 .fontWeight(.semibold)
                                 .multilineTextAlignment(.center)
                                 .foregroundStyle(colorSettings.accentColor)
-                            Text("\(currentLevel.title)")
+                            Text("\(currentLevel.displayTitle)")
                                 .font(.largeTitle)
                                 .fontWeight(.semibold)
                                 .multilineTextAlignment(.center)
+                                .fixedSize(horizontal: false, vertical: true)
                                 .foregroundStyle(colorSettings.accentColor)
                                 .padding(.bottom, 10)
+                                .padding(.horizontal, 5)
                         }
                         //Progress bar
                         ProgressView(value: LevelSystem.progress(for: totalPointsEarned))
@@ -154,17 +157,18 @@ struct HighScoresView: View {
                                 .foregroundStyle(colorSettings.accentColor)
                                 .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
                         } else {
-                            Text("Total Points:")
-                                .font(.title)
-                                .fontWeight(.semibold)
-                                .multilineTextAlignment(.center)
-                                .foregroundStyle(colorSettings.accentColor)
-                                .padding(.top, 5)
-                            Text("\(totalPointsEarned)")
-                                .font(.largeTitle)
-                                .fontWeight(.semibold)
-                                .foregroundStyle(colorSettings.accentColor)
-//                                .padding(.bottom, 5)
+                            HStack {
+                                Text("Total Points:")
+                                    .font(.title)
+                                    .fontWeight(.semibold)
+                                    .multilineTextAlignment(.center)
+                                    .foregroundStyle(colorSettings.accentColor)
+                                    .padding(.top, 5)
+                                Text("\(totalPointsEarned)")
+                                    .font(.largeTitle)
+                                    .fontWeight(.semibold)
+                                    .foregroundStyle(colorSettings.accentColor)
+                            }
                         }
                         //Top 10
                         if appearance.mode == .arcade {

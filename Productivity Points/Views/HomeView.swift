@@ -54,6 +54,7 @@ struct HomeView: View {
                                     .fontWeight(.semibold)
                                     .multilineTextAlignment(.center)
                                     .foregroundStyle(colorSettings.accentColor)
+                                    .padding(.horizontal, 7)
                             }
                             HStack(spacing: 12) {
                                 
@@ -96,18 +97,22 @@ struct HomeView: View {
                                 }
                             }
                             if appearance.mode == .arcade {
-                                Text("Total Points: \(animatedTotalPoints)")
-                                    .font(.custom("PressStart2P-Regular", size: 20))
-                                    .multilineTextAlignment(.center)
-                                    .foregroundStyle(colorSettings.accentColor)
-                                    .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
-                                    .padding(.vertical, 20)
+                                    Text("Total Points: \(animatedTotalPoints)")
+                                        .font(.custom("PressStart2P-Regular", size: 20))
+                                        .foregroundStyle(colorSettings.accentColor)
+                                        .shadow(color: colorSettings.accentColor.opacity(0.8), radius: 10, x: 0, y: 0)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(.vertical, 20)
+                                        .padding(.leading)
                             } else {
                                 Text("Total Points: \(animatedTotalPoints)")
                                     .font(.largeTitle)
                                     .padding(.bottom, 5)
                                     .foregroundStyle(colorSettings.accentColor)
+                                    .monospacedDigit()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                                     .padding(.vertical, 20)
+                                    .padding(.leading)
                             }
                             ZStack(alignment: .top) {
                                 List {
@@ -162,19 +167,42 @@ struct HomeView: View {
                                    let level = progressManager.justLeveledTo {
                                     if appearance.mode == .arcade {
                                         VStack {
-                                            Group {
-                                                Text("LEVEL UP!")
-                                                    .font(.custom("PressStart2P-Regular", size: 24))
-                                                    .padding(.bottom, 5)
-                                                    .padding(.horizontal, 40)
-                                                Text("Level \(level.number)")
-                                                    .font(.custom("PressStart2P-Regular", size: 18))
-                                                    .padding(.bottom, 5)
-                                                Text(level.title)
-                                                    .font(.custom("PressStart2P-Regular", size: 16))
-                                            }
-                                            .foregroundStyle(.white)
-                                            .shadow(color: .white.opacity(0.8), radius: 10, x: 0, y: 0)
+                                                if level.isSlayer {
+                                                    Group {
+                                                        Text("YOU ARE NOW A SLAYER!")
+                                                            .font(.custom("PressStart2P-Regular", size: 24))
+                                                            .padding(.bottom, 20)
+                                                        Text("Through consistency and determination,")
+                                                        Text("you've transformed yourself")
+                                                        Text("from a Slacker into a Slayer.")
+                                                        Spacer()
+                                                            .frame(height: 15)
+                                                        Text("Your journey doesn't end here.")
+                                                        Text("It enters a new chapter.")
+                                                        Spacer()
+                                                            .frame(height: 15)
+                                                        Text("Welcome to the ranks")
+                                                        Text("of the Slayers.")
+                                                    }
+                                                    .font(.footnote)
+                                                    .multilineTextAlignment(.center)
+                                                    .foregroundStyle(.yellow)
+                                                    .shadow(color: .yellow.opacity(0.8), radius: 10, x: 0, y: 0)
+                                                } else {
+                                                    Group {
+                                                        Text("LEVEL UP!")
+                                                            .font(.custom("PressStart2P-Regular", size: 24))
+                                                            .padding(.bottom, 5)
+                                                            .padding(.horizontal, 40)
+                                                        Text("Level \(level.number)")
+                                                            .font(.custom("PressStart2P-Regular", size: 18))
+                                                            .padding(.bottom, 5)
+                                                        Text(level.displayTitle)
+                                                            .font(.custom("PressStart2P-Regular", size: 16))
+                                                    }
+                                                    .foregroundStyle(.white)
+                                                    .shadow(color: .white.opacity(0.8), radius: 10, x: 0, y: 0)
+                                                }
                                         }
                                         .padding()
                                         .background(
@@ -183,7 +211,7 @@ struct HomeView: View {
                                         .cornerRadius(12)
                                         .transition(.scale)
                                         .onAppear {
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + (level.number == LevelSystem.firstSlayerLevel ? 20 : 5)) {
                                                 progressManager.didLevelUp = false
                                                 progressManager.justLeveledTo = nil
                                             }
@@ -199,24 +227,50 @@ struct HomeView: View {
                                         }
                                     } else {
                                         VStack {
-                                            Text("LEVEL UP!")
-                                                .font(.largeTitle)
-                                                .padding(.bottom, 2)
-                                                .padding(.horizontal, 40)
-                                            Text("Level \(level.number)")
-                                                .font(.title)
-                                                    .padding(.bottom, 2)
-                                            Text(level.title)
-                                                .font(.title2)
+                                            if level.isSlayer {
+                                                Text("YOU ARE NOW A SLAYER!")
+                                                    .font(.largeTitle)
+                                                    .multilineTextAlignment(.center)
+                                                    .padding(.bottom, 20)
+                                                    .foregroundStyle(.black)
+                                                    .fontWeight(.bold)
+                                                Group {
+                                                    Text("Through consistency and determination,")
+                                                    Text("you've transformed yourself")
+                                                    Text("from a Slacker into a Slayer.")
+                                                    Spacer()
+                                                        .frame(height: 15)
+                                                    Text("Your journey doesn't end here.")
+                                                    Text("It enters a new chapter.")
+                                                    Spacer()
+                                                        .frame(height: 15)
+                                                    Text("Welcome to the ranks")
+                                                    Text("of the Slayers.")
+                                                }
+                                                .font(.footnote)
+                                                .foregroundStyle(.black)
+                                            } else {
+                                                Group {
+                                                    Text("LEVEL UP!")
+                                                        .font(.largeTitle)
+                                                        .fontWeight(.bold)
+                                                        .padding(.bottom, 2)
+                                                        .padding(.horizontal, 40)
+                                                    Text("Level \(level.number)")
+                                                        .font(.title)
+                                                        .padding(.bottom, 2)
+                                                    Text(level.displayTitle)
+                                                        .font(.title2)
+                                                }
+                                                .foregroundStyle(.white)
+                                            }
                                         }
                                         .padding()
-                                        .background(
-                                            flash ? Color.yellow.opacity(0.4) : Color(colorSettings.secondAccentColor).opacity(0.8)
-                                        )
+                                        .background(level.isSlayer ? (flash ? Color.blue.opacity(0.8) : Color.yellow.opacity(0.8)) : (flash ? Color.yellow.opacity(0.4) : Color.black.opacity(0.8)))
                                         .cornerRadius(12)
                                         .transition(.scale)
                                         .onAppear {
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + (level.number == LevelSystem.firstSlayerLevel ? 20 : 5)) {
                                                 progressManager.didLevelUp = false
                                                 progressManager.justLeveledTo = nil
                                             }
@@ -265,8 +319,9 @@ struct HomeView: View {
                         .presentationDetents(sheet == .help ? [.large] : [.height(550)])
                 }
                 
-                if progressManager.didLevelUp {
-                    ConfettiView()
+                if progressManager.didLevelUp,
+                   let level = progressManager.justLeveledTo {
+                    ConfettiView(colors: level.isSlayer ? [.yellow] : [.red, .yellow, .green, .blue, .pink, .purple])
                 }
                 Button {
                     modalType = .newMission
@@ -318,11 +373,24 @@ struct HomeView: View {
             
             DispatchQueue.main.async {
                 let didLevelUp = progressManager.checkForLevelUp(missions: missions)
-                SoundManager.shared.playSound(
-                    named: appearance.mode == .arcade
-                        ? (didLevelUp ? "LevelUpArcade" : "AffirmativeArcade")
-                        : (didLevelUp ? "LevelUpNormal" : "AffirmativeNormal")
-                )
+                let soundName: String
+                if didLevelUp {
+                    if progressManager.justLeveledTo?.isSlayer == true {
+                        soundName = appearance.mode == .arcade
+                            ? "LevelUpArcadeSlayer"
+                            : "LevelUpNormalSlayer"
+                    } else {
+                        soundName = appearance.mode == .arcade
+                            ? "LevelUpArcade"
+                            : "LevelUpNormal"
+                    }
+                } else {
+                    soundName = appearance.mode == .arcade
+                        ? "AffirmativeArcade"
+                        : "AffirmativeNormal"
+                }
+
+                SoundManager.shared.playSound(named: soundName)
                 rumble.impactOccurred()
             }
         }
@@ -372,6 +440,12 @@ extension View {
         } else {
             self
         }
+    }
+}
+
+extension Level {
+    var isSlayer: Bool {
+        number == LevelSystem.firstSlayerLevel
     }
 }
 

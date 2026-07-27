@@ -11,8 +11,9 @@ struct ConfettiView: View {
     @State private var pieces: [ConfettiPiece] = []
     @State private var spawnedCount = 0
 
-    let maxPieces = 350
-    let colors: [Color] = [.red, .yellow, .green, .blue, .pink, .purple]
+    let maxPieces = 225
+    let colors: [Color]
+//    let colors: [Color] = [.red, .yellow, .green, .blue, .pink, .purple]
 
     var body: some View {
         GeometryReader { geo in
@@ -101,6 +102,6 @@ extension Comparable {
     }
 }
 
-#Preview {
-   ConfettiView()
-}
+//#Preview {
+//   ConfettiView()
+//}
