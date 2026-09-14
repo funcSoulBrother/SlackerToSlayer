@@ -2,7 +2,7 @@
 
 Slacker to Slayer is a native iOS productivity application that turns everyday tasks into a video game. Create daily Missions, earn points for completing them, build streaks, beat your high scores, and level up from Slacker to Slayer.
 
-[![Download on the App Store](.ProjectPP/Productivity-Points/Assets.xcassets/AppStoreBadge.svg)](https://apps.apple.com/us/app/tailwind-guide/id6743378214)
+[![Download on the App Store](./assets/AppStoreBadge.svg)](https://apps.apple.com/us/app/tailwind-guide/id6743378214)
 
 ## Overview
 
