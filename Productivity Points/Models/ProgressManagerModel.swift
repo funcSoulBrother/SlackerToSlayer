@@ -42,7 +42,7 @@ class ProgressManager: ObservableObject {
         print("Total Points:", totalPoints)
         print("New Level:", newLevel.number)
         
-        if !unlockedLevels.contains(newLevel.number) {
+        if newLevel.number > 1 && !unlockedLevels.contains(newLevel.number) {
             print("🎉 LEVEL UP TRIGGERED:", newLevel.number)
             var updated = unlockedLevels
             updated.insert(newLevel.number)

@@ -24,7 +24,7 @@ struct Level: Equatable {
 
 struct LevelSystem {
     static let finalNormalLevel = 20
-    static let firstSlayerLevel = 2
+    static let firstSlayerLevel = 21
     static let prestigePointsPerLevel = 350
     
     static let levels: [Level] = [
