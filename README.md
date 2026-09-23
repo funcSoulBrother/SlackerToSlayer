@@ -12,11 +12,22 @@ In Slacker to Slayer, productive tasks are called **Missions**. Create your own 
 
 ## Screenshots
 
-<p align="center">
-  <img src="..." width="250">
-  <img src="..." width="250">
-  <img src="..." width="250">
-</p>
+<table>
+  <tr>
+    <td align="center">
+      <img src="Promotional%20Screen%20Shots/READMEScreenshotHome.png" width="250" alt="Slacker to Slayer Home Screen"><br>
+      <strong>Home</strong>
+    </td>
+    <td align="center">
+      <img src="Tailwind/Promotional%20Screenshots/READMEScreenshotHighScores.png" width="250" alt="Slacker to Slayer High Scores"><br>
+      <strong>High Scores</strong>
+    </td>
+    <td align="center">
+      <img src="Tailwind/Promotional%20Screenshots/READMEScreenshotMonthsAndStreaks.png" width="250" alt="Slacker to Slayer Months and Streaks"><br>
+      <strong>Months and Streaks</strong>
+    </td>
+  </tr>
+</table>
 
 ## Features
 
@@ -26,7 +37,7 @@ In Slacker to Slayer, productive tasks are called **Missions**. Create your own 
 - Daily and monthly high scores
 - Longest streak tracking
 - Leveling and prestige system, including Slayer ranks
-- 80s arcade-inspired aesthetic with an option for a standard appearance
+- 80's arcade-inspired aesthetic with an option for a standard appearance
 - Customizable accent colors
 - Persistent Mission and progress data using SwiftData
 
@@ -53,14 +64,13 @@ The application uses a SwiftUI-based architecture with separation between views,
 
 ## Requirements
 
-- Xcode 26.4+
-- iOS 26.0+
-- macOS 15.0+
+- iOS: 17.0 or later
+- To build: Xcode 15.0 or later, on macOS Ventura 13.5 or later
 
 ## Installation
 
 1. Clone the repository.
-2. Open `SideC.xcodeproj` in Xcode.
+2. Open `Productivity Points.xcodeproj` in Xcode.
 3. Select a simulator or connected device.
 4. Build and run the application.
 
