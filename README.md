@@ -19,12 +19,12 @@ In Slacker to Slayer, productive tasks are called **Missions**. Create your own 
       <strong>Home</strong>
     </td>
     <td align="center">
-      <img src="Promotional%20Screen%20Shots/READMEScreenshotHighScores.png" width="250" alt="Slacker to Slayer High Scores Screen"><br>
-      <strong>High Scores</strong>
-    </td>
-    <td align="center">
       <img src="Promotional%20Screen%20Shots/READMEScreenshotMonthsAndStreaks.png" width="250" alt="Slacker to Slayer Months and Streaks Screen"><br>
       <strong>Months and Streaks</strong>
+    </td>
+    <td align="center">
+      <img src="Promotional%20Screen%20Shots/READMEScreenshotHighScores.png" width="250" alt="Slacker to Slayer High Scores Screen"><br>
+      <strong>High Scores</strong>
     </td>
       <td align="center">
         <img src="Promotional%20Screen%20Shots/READMEScreenshotSettings.png" width="250" alt="Slacker to Slayer Settings Screen"><br>
