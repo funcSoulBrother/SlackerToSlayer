@@ -6,9 +6,14 @@
 //
 import SwiftUI
 import SwiftData
+import GoogleMobileAds
 
 @main
 struct ProductivityPoints: App {
+    init() {
+        MobileAds.shared.start(completionHandler: nil)
+    }
+    
     // Create the container for all models
     let container: ModelContainer = {
         let container = try! ModelContainer(

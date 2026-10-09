@@ -36,9 +36,22 @@ struct HomeView: View {
                     .ignoresSafeArea()
                 Group {
                     if missions.isEmpty {
-                        ContentUnavailableView("Create your first Mission by tapping on the \(Image(systemName: "plus.circle.fill")) button at the bottom right corner.", image: "launchScreen")
-                            .foregroundStyle(colorSettings.accentColor)
-                        ///insert app icon instead of image: "launchScreen" when it exists
+                        VStack() {
+                            Image("icon-transparent")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 150, height: 150)
+                            Text("Create your first Mission by tapping on the \(Image(systemName: "plus.circle.fill")) button at the bottom right corner.")
+                                .foregroundStyle(colorSettings.accentColor)
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .multilineTextAlignment(.center)
+//                            ContentUnavailableView("Create your first Mission by tapping on the \(Image(systemName: "plus.circle.fill")) button at the bottom right corner.", image: "icon-transparent")
+//                                .foregroundStyle(colorSettings.accentColor)
+                        }
+                        .frame(maxHeight: .infinity, alignment: .center)
+                        .padding(.horizontal, 30)
+                        .padding(.bottom, 100)
                     } else {
                         VStack {
                             if appearance.mode == .arcade {
@@ -330,7 +343,8 @@ struct HomeView: View {
                         .font(.system(size: 50))
                         .foregroundStyle(colorSettings.accentColor)
                 }
-                .padding(30)
+                .padding(.trailing, 30)
+                .padding(.bottom, 70)
             }
             .onAppear {
                 if progressManager.unlockedLevels.isEmpty {
@@ -345,6 +359,13 @@ struct HomeView: View {
             }
         }
             .preferredColorScheme(appearance.mode == .arcade ? .dark : nil)
+            .safeAreaInset(edge: .bottom) {
+                AdBannerView()
+                    .frame(width: 320, height: 50)
+                    .frame(maxWidth: .infinity)
+                    .background(Color(appearance.mode == .arcade ? "ArcadeBG" : "EasyBG"))
+                    .padding(.bottom, 10)
+            }
     }
 
     // Check if a completion exists for selectedDate

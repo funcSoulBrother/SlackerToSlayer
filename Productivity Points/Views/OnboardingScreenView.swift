@@ -23,7 +23,7 @@ struct OnboardingScreen: View {
                         .shadow(color: .blue.opacity(0.8), radius: 10, x: 0, y: 0)
                         .padding()
                 }
-                VStack(alignment: .leading){
+                VStack(alignment: .leading) {
                     HStack{
                         Image(systemName: "map.fill")
                             .font(.title)
@@ -44,9 +44,15 @@ struct OnboardingScreen: View {
                     }
                     .padding()
                     HStack{
-                        Image(systemName: "flag.pattern.checkered")
-                            .font(.title)
-                            .foregroundColor(.white)
+                        if #available(iOS 26, *) {
+                            Image(systemName: "flag.pattern.checkered")
+                                .font(.title)
+                                .foregroundColor(.white)
+                        } else {
+                            Image(systemName: "flag")
+                                .font(.title)
+                                .foregroundColor(.white)
+                        }
                         Text("Earn enough points and you'll level up. Challenge yourself to get from Level 1 (Slacker) to Level 21 (Slayer)!")
                             .font(.title3)
                             .fontWeight(.light)
